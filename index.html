@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laura & Felix | Wir heiraten!</title>
+
+    <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sage: {
+                            50: '#f4f7f5',
+                            100: '#e5ede8',
+                            200: '#cedfd5',
+                            300: '#a7c6b5',
+                            500: '#5c8a70',
+                            600: '#467057',
+                            700: '#385946',
+                            800: '#2d4737',
+                            900: '#23392c',
+                        },
+                        champagne: {
+                            100: '#faf5ed',
+                            200: '#f4ead6',
+                            300: '#e8d4b3',
+                            500: '#c5a368',
+                            600: '#a68249',
+                        },
+                        cream: '#FDFBF7',
+                        warmgray: '#2C2A29'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* Sanfte Fokus- und Transition-Effekte */
+        .btn-smooth {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Subtiler Glow-Effekt für Karten */
+        .card-shadow {
+            box-shadow: 0 10px 30px -5px rgba(56, 89, 70, 0.05), 0 4px 12px -2px rgba(56, 89, 70, 0.03);
+        }
+    </style>
+</head>
+<body class="bg-cream text-warmgray font-sans antialiased selection:bg-sage-200 selection:text-sage-900 min-h-screen flex flex-col justify-between">
+
+    <!-- NAVIGATION / HEADER -->
+    <header class="fixed top-0 left-0 w-full bg-cream/90 backdrop-blur-md z-40 border-b border-sage-100 transition-all">
+        <div class="max-w-6xl mx-auto px-6 h-18 py-3.5 flex items-center justify-between">
+            <a href="#hero" class="font-serif text-2xl font-bold tracking-wider text-sage-800">L & F</a>
+            
+            <nav class="hidden md:flex space-x-8 text-sm font-medium tracking-wide text-sage-900/80">
+                <a href="#details" class="hover:text-sage-600 transition-colors">Ablauf</a>
+                <a href="#locations" class="hover:text-sage-600 transition-colors">Locations</a>
+                <a href="#info" class="hover:text-sage-600 transition-colors">Infos</a>
+                <a href="#rsvp" class="hover:text-sage-600 transition-colors">RSVP</a>
+                <a href="#faq" class="hover:text-sage-600 transition-colors">FAQ</a>
+            </nav>
+
+            <a href="#rsvp" class="px-5 py-2 rounded-full bg-sage-700 text-cream text-xs sm:text-sm font-semibold tracking-wider hover:bg-sage-800 shadow-sm transition-all transform active:scale-95">
+                RÜCKMELDUNG
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-grow pt-16">
+
+        <!-- 1. HERO SECTION -->
+        <section id="hero" class="relative min-h-[85vh] flex flex-col items-center justify-center text-center px-4 py-16 overflow-hidden">
+            <!-- Dekorative florale/sanfte SVG-Hintergrundformen -->
+            <div class="absolute -top-32 -left-32 w-96 h-96 bg-sage-100/60 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-champagne-200/40 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 max-w-2xl mx-auto space-y-6">
+                <p class="text-xs md:text-sm font-semibold uppercase tracking-[0.25em] text-sage-700">Wir sagen Ja!</p>
+                <h1 class="font-serif text-5xl sm:text-7xl lg:text-8xl font-normal text-sage-900 leading-none">
+                    Laura <span class="italic font-light text-champagne-600">&amp;</span> Felix
+                </h1>
+                <p class="text-lg md:text-xl font-light text-warmgray/80 italic font-serif">
+                    18. Juli 2026 • Gutshof am Schlosspark, Mainz
+                </p>
+
+                <!-- Trennlinie mit dezentem Ornament -->
+                <div class="flex items-center justify-center space-x-4 py-2">
+                    <span class="h-px w-16 bg-sage-300"></span>
+                    <span class="text-champagne-500 text-xl">✦</span>
+                    <span class="h-px w-16 bg-sage-300"></span>
+                </div>
+
+                <p class="text-sm md:text-base text-warmgray/75 leading-relaxed max-w-lg mx-auto">
+                    Wir können es kaum erwarten, den schönsten Tag unseres Lebens gemeinsam mit den Menschen zu feiern, die uns am meisten bedeuten.
+                </p>
+
+                <!-- LIVE COUNTDOWN -->
+                <div class="pt-6">
+                    <div class="grid grid-cols-4 gap-3 max-w-xs sm:max-w-md mx-auto">
+                        <div class="bg-white/80 border border-sage-200 p-3 rounded-2xl shadow-sm text-center">
+                            <span id="days" class="block font-serif text-2xl sm:text-4xl text-sage-800 font-bold">0</span>
+                            <span class="text-[10px] sm:text-xs font-semibold tracking-wider text-sage-600 uppercase">Tage</span>
+                        </div>
+                        <div class="bg-white/80 border border-sage-200 p-3 rounded-2xl shadow-sm text-center">
+                            <span id="hours" class="block font-serif text-2xl sm:text-4xl text-sage-800 font-bold">0</span>
+                            <span class="text-[10px] sm:text-xs font-semibold tracking-wider text-sage-600 uppercase">Std</span>
+                        </div>
+                        <div class="bg-white/80 border border-sage-200 p-3 rounded-2xl shadow-sm text-center">
+                            <span id="minutes" class="block font-serif text-2xl sm:text-4xl text-sage-800 font-bold">0</span>
+                            <span class="text-[10px] sm:text-xs font-semibold tracking-wider text-sage-600 uppercase">Min</span>
+                        </div>
+                        <div class="bg-white/80 border border-sage-200 p-3 rounded-2xl shadow-sm text-center">
+                            <span id="seconds" class="block font-serif text-2xl sm:text-4xl text-sage-800 font-bold">0</span>
+                            <span class="text-[10px] sm:text-xs font-semibold tracking-wider text-sage-600 uppercase">Sek</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. ABLAUF (TIMELINE) -->
+        <section id="details" class="py-20 px-6 bg-sage-50/50">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16">
+                    <span class="text-xs uppercase tracking-[0.2em] font-semibold text-sage-600">Der Tag</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl text-sage-900 mt-2">Geplanter Tagesablauf</h2>
+                </div>
+
+                <div class="relative border-l-2 border-sage-200 ml-4 sm:ml-32 space-y-12">
+                    <!-- Item 1 -->
+                    <div class="relative pl-8 group">
+                        <span class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-cream border-2 border-sage-600 group-hover:scale-125 transition-transform"></span>
+                        <div class="sm:absolute sm:-left-32 sm:top-1 sm:w-24 sm:text-right font-serif text-lg font-semibold text-sage-700">14:00 Uhr</div>
+                        <div class="bg-white p-5 rounded-2xl border border-sage-100 card-shadow">
+                            <h3 class="font-serif text-xl text-sage-900 font-semibold">Kirchliche Trauung</h3>
+                            <p class="text-xs sm:text-sm text-warmgray/70 mt-1">St. Stephanus Kirche, Mainz. Wir bitten darum, sich bis spätestens 13:45 Uhr einzufinden.</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="relative pl-8 group">
+                        <span class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-cream border-2 border-sage-600 group-hover:scale-125 transition-transform"></span>
+                        <div class="sm:absolute sm:-left-32 sm:top-1 sm:w-24 sm:text-right font-serif text-lg font-semibold text-sage-700">15:30 Uhr</div>
+                        <div class="bg-white p-5 rounded-2xl border border-sage-100 card-shadow">
+                            <h3 class="font-serif text-xl text-sage-900 font-semibold">Sektempfang & Gratulation</h3>
+                            <p class="text-xs sm:text-sm text-warmgray/70 mt-1">Im Rosengarten des Gutshofs. Häppchen, kühle Drinks und erste gemeinsame Momente.</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="relative pl-8 group">
+                        <span class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-cream border-2 border-sage-600 group-hover:scale-125 transition-transform"></span>
+                        <div class="sm:absolute sm:-left-32 sm:top-1 sm:w-24 sm:text-right font-serif text-lg font-semibold text-sage-700">18:30 Uhr</div>
+                        <div class="bg-white p-5 rounded-2xl border border-sage-100 card-shadow">
+                            <h3 class="font-serif text-xl text-sage-900 font-semibold">Festliches Dinner</h3>
+                            <p class="text-xs sm:text-sm text-warmgray/70 mt-1">Festsaal "Alte Scheune". Kulinarische Gänge, kurze Reden und liebevolle Rückblicke.</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="relative pl-8 group">
+                        <span class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-cream border-2 border-sage-600 group-hover:scale-125 transition-transform"></span>
+                        <div class="sm:absolute sm:-left-32 sm:top-1 sm:w-24 sm:text-right font-serif text-lg font-semibold text-sage-700">21:30 Uhr</div>
+                        <div class="bg-white p-5 rounded-2xl border border-sage-100 card-shadow">
+                            <h3 class="font-serif text-xl text-sage-900 font-semibold">Eröffnungstanz & Party</h3>
+                            <p class="text-xs sm:text-sm text-warmgray/70 mt-1">Wir tanzen durch die Nacht – lasst uns gemeinsam unvergessliche Erinnerungen schaffen!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. LOCATIONS & INFOS -->
+        <section id="locations" class="py-20 px-6">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-14">
+                    <span class="text-xs uppercase tracking-[0.2em] font-semibold text-sage-600">Wo & Wann</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl text-sage-900 mt-2">Die Locations</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Trauung -->
+                    <div class="bg-white rounded-3xl p-8 border border-sage-100 card-shadow flex flex-col justify-between">
+                        <div>
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-sage-100 text-sage-800 mb-4">Kirchliche Trauung</span>
+                            <h3 class="font-serif text-2xl font-bold text-sage-900">St. Stephanus Kirche</h3>
+                            <p class="text-sm text-warmgray/70 mt-2 leading-relaxed">
+                                Kirchstraße 12, 55116 Mainz<br>
+                                Parkmöglichkeiten finden sich direkt im benachbarten Parkhaus Römisches Theater (ca. 4 Gehminuten).
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-sage-100 flex items-center justify-between">
+                            <span class="text-xs text-sage-700 font-medium">Beginn: 14:00 Uhr</span>
+                            <a href="https://maps.google.com/?q=St.+Stephanus+Kirche+Mainz" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-xs font-semibold text-sage-800 hover:text-sage-600">
+                                In Google Maps öffnen &rarr;
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Feier -->
+                    <div class="bg-white rounded-3xl p-8 border border-sage-100 card-shadow flex flex-col justify-between">
+                        <div>
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-champagne-200 text-champagne-800 mb-4">Empfang & Feier</span>
+                            <h3 class="font-serif text-2xl font-bold text-sage-900">Gutshof am Schlosspark</h3>
+                            <p class="text-sm text-warmgray/70 mt-2 leading-relaxed">
+                                Schlossallee 45, 55268 Mainz-Hechtsheim<br>
+                                Ausreichend Parkplätze vor Ort auf dem Gutshofgelände vorhanden. Taxi-Bestellungen werden später an der Rezeption organisiert.
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-sage-100 flex items-center justify-between">
+                            <span class="text-xs text-sage-700 font-medium">Ab: 15:30 Uhr</span>
+                            <a href="https://maps.google.com/?q=Gutshof+am+Schlosspark+Mainz" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-xs font-semibold text-sage-800 hover:text-sage-600">
+                                In Google Maps öffnen &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DRESSCODE & GESCHENKE -->
+                <div id="info" class="grid sm:grid-cols-2 gap-8 mt-12">
+                    <div class="p-6 rounded-2xl bg-sage-50 border border-sage-200/60 text-center">
+                        <div class="w-10 h-10 mx-auto mb-3 rounded-full bg-white flex items-center justify-center text-sage-700 shadow-sm">
+                            👔
+                        </div>
+                        <h4 class="font-serif text-xl font-bold text-sage-900 mb-1">Dresscode</h4>
+                        <p class="text-xs sm:text-sm text-warmgray/70">
+                            <strong>Festlich-Elegant / Summer Chic:</strong> Fühlt euch wohl und bringt sommerliche Frische mit! (Bitte kein reines Weiß oder Salbeigrün reserviert für das Brautpaar).
+                        </p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-champagne-100/60 border border-champagne-300/40 text-center">
+                        <div class="w-10 h-10 mx-auto mb-3 rounded-full bg-white flex items-center justify-center text-champagne-700 shadow-sm">
+                            ✈️
+                        </div>
+                        <h4 class="font-serif text-xl font-bold text-sage-900 mb-1">Geschenkwunsch</h4>
+                        <p class="text-xs sm:text-sm text-warmgray/70">
+                            Das größte Geschenk ist eure Anwesenheit. Wer uns dennoch etwas schenken möchte, hilft uns dabei, unsere <strong>Flitterwochenkasse</strong> aufzubessern!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. RSVP BEREICH (MIT DEM FLÜCHTENDEN BUTTON GAG) -->
+        <section id="rsvp" class="py-20 px-4 sm:px-6 bg-sage-100/40 relative">
+            <div class="max-w-2xl mx-auto bg-white rounded-3xl p-6 sm:p-10 border border-sage-200 card-shadow">
+                
+                <div class="text-center mb-8">
+                    <span class="text-xs uppercase tracking-[0.2em] font-semibold text-sage-600">Rückmeldung</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl text-sage-900 mt-1">Bist du dabei?</h2>
+                    <p class="text-xs sm:text-sm text-warmgray/70 mt-2">
+                        Bitte gib uns bis zum <strong>01. Juni 2026</strong> Bescheid, damit wir entsprechend planen können.
+                    </p>
+                </div>
+
+                <form id="weddingRsvpForm" class="space-y-6">
+
+                    <!-- Persönliche Daten -->
+                    <div class="space-y-4">
+                        <div>
+                            <label for="fullName" class="block text-xs font-semibold uppercase tracking-wider text-sage-800 mb-1.5">
+                                Vor- und Nachname *
+                            </label>
+                            <input type="text" id="fullName" name="fullName" required placeholder="z. B. Max Mustermann" 
+                                class="w-full px-4 py-3 rounded-xl border border-sage-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all">
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-sage-800 mb-1.5">
+                                    E-Mail-Adresse *
+                                </label>
+                                <input type="email" id="email" name="email" required placeholder="max@beispiel.de" 
+                                    class="w-full px-4 py-3 rounded-xl border border-sage-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all">
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-xs font-semibold uppercase tracking-wider text-sage-800 mb-1.5">
+                                    Telefonnummer
+                                </label>
+                                <input type="tel" id="phone" name="phone" placeholder="+49 170 1234567" 
+                                    class="w-full px-4 py-3 rounded-xl border border-sage-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ENTSCHEIDUNG: ZUSAGE ODER ABSAGE (INTERAKTIVER GAG) -->
+                    <div class="pt-2">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-sage-800 mb-2 text-center">
+                            Deine Rückmeldung *
+                        </label>
+                        
+                        <!-- Entscheidungs-Container (dient als Begrenzung für den flüchtenden Button) -->
+                        <div id="decisionContainer" class="relative min-h-[140px] sm:min-h-[120px] bg-sage-50/70 border border-sage-200 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-center gap-4 overflow-hidden">
+                            
+                            <!-- ZUSAGE BUTTON -->
+                            <button type="button" id="acceptBtn" class="btn-smooth w-full sm:w-auto px-6 py-3.5 rounded-xl font-medium text-sm text-white bg-sage-700 hover:bg-sage-800 shadow-md flex items-center justify-center gap-2 border-2 border-transparent">
+                                <span>🎉</span> Ich bin dabei!
+                            </button>
+
+                            <!-- FLÜCHTENDER ABSAGE BUTTON -->
+                            <!-- Nutzt transform für butterweiches Ausweichen ohne Layout-Shift des Containers -->
+                            <button type="button" id="declineBtn" class="w-full sm:w-auto px-6 py-3.5 rounded-xl font-medium text-sm text-warmgray/80 bg-white border border-sage-300 hover:bg-stone-50 flex items-center justify-center gap-2 transition-transform duration-200 ease-out select-none">
+                                <span>😢</span> <span id="declineBtnText">Ich kann leider nicht</span>
+                            </button>
+
+                            <!-- Verstecktes Radio-Feld zur Formular-Validierung -->
+                            <input type="hidden" name="attendanceStatus" id="attendanceStatus" value="">
+                        </div>
+                        <p id="decisionHint" class="text-center text-xs text-sage-600 mt-2 font-medium h-4"></p>
+                    </div>
+
+                    <!-- DYNAMISCHE FELDER FÜR ZUSAGE -->
+                    <div id="attendanceFields" class="hidden space-y-6 pt-4 border-t border-sage-100 transition-all duration-300">
+                        <!-- Begleitung -->
+                        <div class="bg-sage-50/50 p-4 rounded-xl border border-sage-200">
+                            <span class="block text-xs font-semibold uppercase tracking-wider text-sage-800 mb-2">
+                                Bringst du eine Begleitung mit?
+                            </span>
+                            <div class="flex items-center space-x-6">
+                                <label class="flex items-center space-x-2 text-sm cursor-pointer">
+                                    <input type="radio" name="hasPlusOne" value="no" checked class="text-sage-600 focus:ring-sage-500">
+                                    <span>Nein, ich komme alleine</span>
+                                </label>
+                                <label class="flex items-center space-x-2 text-sm cursor-pointer">
+                                    <input type="radio" name="hasPlusOne" value="yes" class="text-sage-600 focus:ring-sage-500">
+                                    <span>Ja, mit Begleitung (+1)</span>
+                                </label>
+                            </div>
+
+                            <!-- Name der Begleitung (bedingt eingeblendet) -->
+                            <div id="plusOneContainer" class="hidden mt-4 pt-3 border-t border-sage-200/60">
+                                <label for="plusOneName" class="block text-xs font-semibold uppercase tracking-wider text-sage-800 mb-1.5">
+                                    Vor- und Nachname der Begleitung *
+                                </label>
+                                <input type="text" id="plusOneName" name="plusOneName" placeholder="Name deiner Begleitung"
+                                    class="w-full px-4 py-2.5 rounded-xl border border-sage-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500">
+                            </div>
+                        </div>
+
+                        <!-- Musikwunsch -->
+                        <div>
+                            <label for="songRequest" class="block text-xs font-semibold uppercase tracking-wider text-sage-800 mb-1.5">
+                                Musikwunsch 🎵
+                            </label>
+                            <input type="text" id="songRequest" name="songRequest" placeholder="Welcher Song bringt dich garantiert auf die Tanzfläche?"
+                                class="w-full px-4 py-3 rounded-xl border border-sage-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500">
+                        </div>
+                    </div>
+
+                    <!-- NACHRICHT AN DAS BRAUTPAAR (Immer verfügbar) -->
+                    <div>
+                        <label for="personalMessage" class="block text-xs font-semibold uppercase tracking-wider text-sage-800 mb-1.5">
+                            Persönliche Nachricht (optional)
+                        </label>
+                        <textarea id="personalMessage" name="personalMessage" rows="3" placeholder="Liebe Laura, lieber Felix..."
+                            class="w-full px-4 py-3 rounded-xl border border-sage-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500 resize-none"></textarea>
+                    </div>
+
+                    <!-- SUBMIT BUTTON -->
+                    <button type="submit" id="submitBtn" class="w-full py-4 rounded-xl font-bold text-white bg-sage-800 hover:bg-sage-900 shadow-md transition-all transform active:scale-98 tracking-wider uppercase text-xs sm:text-sm">
+                        Antwort absenden
+                    </button>
+                </form>
+
+            </div>
+        </section>
+
+        <!-- 5. FAQ SECTION (Akkordeon) -->
+        <section id="faq" class="py-20 px-6 max-w-3xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="text-xs uppercase tracking-[0.2em] font-semibold text-sage-600">Fragen & Antworten</span>
+                <h2 class="font-serif text-3xl sm:text-4xl text-sage-900 mt-2">Häufige Fragen</h2>
+            </div>
+
+            <div class="space-y-4">
+                <!-- FAQ 1 -->
+                <div class="border border-sage-200 rounded-2xl bg-white overflow-hidden transition-all">
+                    <button class="w-full p-5 text-left font-serif text-lg font-semibold text-sage-900 flex justify-between items-center focus:outline-none" onclick="toggleFaq(this)">
+                        <span>Gibt es Parkplätze vor Ort?</span>
+                        <span class="text-sage-500 transform transition-transform duration-200 text-xl">+</span>
+                    </button>
+                    <div class="px-5 pb-5 text-xs sm:text-sm text-warmgray/75 hidden leading-relaxed border-t border-sage-100 pt-3">
+                        Ja! An der Kirche steht das Parkhaus „Römisches Theater“ zur Verfügung. Am Gutshof gibt es einen großen, kostenfreien Gästeparkplatz direkt neben dem Haupteingang.
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="border border-sage-200 rounded-2xl bg-white overflow-hidden transition-all">
+                    <button class="w-full p-5 text-left font-serif text-lg font-semibold text-sage-900 flex justify-between items-center focus:outline-none" onclick="toggleFaq(this)">
+                        <span>Habt ihr Empfehlungen für Hotels & Unterkünfte?</span>
+                        <span class="text-sage-500 transform transition-transform duration-200 text-xl">+</span>
+                    </button>
+                    <div class="px-5 pb-5 text-xs sm:text-sm text-warmgray/75 hidden leading-relaxed border-t border-sage-100 pt-3">
+                        Wir haben ein Zimmerkontingent im „Hotel Schlosspark Mainz“ und im „Hyatt Regency Mainz“ unter dem Stichwort „Hochzeit Laura & Felix“ reserviert. Bitte bucht rechtzeitig bis zum 01. Mai 2026.
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="border border-sage-200 rounded-2xl bg-white overflow-hidden transition-all">
+                    <button class="w-full p-5 text-left font-serif text-lg font-semibold text-sage-900 flex justify-between items-center focus:outline-none" onclick="toggleFaq(this)">
+                        <span>Dürfen wir während der Trauung Fotos machen? (Unplugged Wedding)</span>
+                        <span class="text-sage-500 transform transition-transform duration-200 text-xl">+</span>
+                    </button>
+                    <div class="px-5 pb-5 text-xs sm:text-sm text-warmgray/75 hidden leading-relaxed border-t border-sage-100 pt-3">
+                        Wir wünschen uns eine „Unplugged Ceremony“ während der kirchlichen Trauung. Bitte lasst Smartphones und Kameras in der Tasche und genießt den Moment mit uns. Unsere Fotografin hält alles professionell fest. Ab dem Sektempfang dürft ihr nach Herzenslust knipsen!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-sage-900 text-cream/80 py-10 px-6 text-center text-xs">
+        <p class="font-serif text-xl text-cream mb-2">Laura & Felix</p>
+        <p class="text-sage-300">18. Juli 2026 • Mainz</p>
+        <div class="mt-6 text-sage-400">
+            Mit Liebe gestaltet für unseren besonderen Tag ♡
+        </div>
+    </footer>
+
+    <!-- SUCCESS MODAL (Bestätigung nach RSVP) -->
+    <div id="successModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center border border-sage-200 shadow-2xl relative">
+            <div id="modalIcon" class="w-16 h-16 bg-sage-100 text-sage-700 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+                🎉
+            </div>
+            <h3 id="modalTitle" class="font-serif text-2xl font-bold text-sage-900">Vielen Dank!</h3>
+            <p id="modalMessage" class="text-sm text-warmgray/75 mt-2 leading-relaxed">
+                Deine Rückmeldung wurde erfolgreich übermittelt. Wir freuen uns riesig auf dich!
+            </p>
+            <button onclick="closeModal()" class="mt-6 px-6 py-2.5 bg-sage-800 text-white font-medium text-xs rounded-full hover:bg-sage-900 transition-all">
+                Schließen
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIK -->
+    <script>
+        // -------------------------------------------------------------
+        // 1. LIVE COUNTDOWN
+        // -------------------------------------------------------------
+        const weddingDate = new Date('2026-07-18T14:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            if (distance < 0) {
+                document.getElementById('days').innerText = "0";
+                document.getElementById('hours').innerText = "0";
+                document.getElementById('minutes').innerText = "0";
+                document.getElementById('seconds').innerText = "0";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = days;
+            document.getElementById('hours').innerText = hours;
+            document.getElementById('minutes').innerText = minutes;
+            document.getElementById('seconds').innerText = seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // -------------------------------------------------------------
+        // 2. DER FLÜCHTENDE ABSAGE-BUTTON (GAG LOGIK)
+        // -------------------------------------------------------------
+        let dodgeCount = 0;
+        const maxDodges = 3;
+        const declineBtn = document.getElementById('declineBtn');
+        const declineBtnText = document.getElementById('declineBtnText');
+        const decisionContainer = document.getElementById('decisionContainer');
+        const decisionHint = document.getElementById('decisionHint');
+        const acceptBtn = document.getElementById('acceptBtn');
+        const attendanceStatus = document.getElementById('attendanceStatus');
+        const attendanceFields = document.getElementById('attendanceFields');
+        const plusOneContainer = document.getElementById('plusOneContainer');
+        const plusOneNameInput = document.getElementById('plusOneName');
+
+        const dodgeTexts = [
+            "Bist du dir wirklich sicher? 🤔",
+            "Überleg es dir nochmal! 🥺",
+            "Allerletzte Chance... Bleib doch! ✨"
+        ];
+
+        function runAway(event) {
+            if (dodgeCount >= maxDodges) return;
+
+            // Verhindere Default Touch-Aktionen, falls auf mobilen Geräten getippt wird
+            if (event.cancelable && event.type === 'touchstart') {
+                event.preventDefault();
+            }
+
+            dodgeCount++;
+
+            // Begrenzungen des Elterncontainers berechnen
+            const containerRect = decisionContainer.getBoundingClientRect();
+            const btnRect = declineBtn.getBoundingClientRect();
+
+            // Maximaler Versatz im Rahmen des Containers (mit Sicherheitsabstand)
+            const padding = 12;
+            const maxTranslateX = (containerRect.width / 2) - (btnRect.width / 2) - padding;
+            const maxTranslateY = 35; // Vertikaler Spielraum
+
+            // Zufällige Richtung & Distanz bestimmen
+            const dirX = Math.random() > 0.5 ? 1 : -1;
+            const dirY = Math.random() > 0.5 ? 1 : -1;
+            
+            const randomX = Math.floor((Math.random() * 0.7 + 0.3) * maxTranslateX) * dirX;
+            const randomY = Math.floor((Math.random() * 0.8 + 0.2) * maxTranslateY) * dirY;
+
+            declineBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+
+            // Humorvolles Textupdate
+            if (dodgeCount <= maxDodges) {
+                decisionHint.innerText = dodgeTexts[dodgeCount - 1];
+            }
+
+            // Nach dem 3. Versuch: Button bleibt stehen und wird klickbar
+            if (dodgeCount >= maxDodges) {
+                setTimeout(() => {
+                    declineBtn.style.transform = `translate(0px, 0px)`;
+                    declineBtnText.innerText = "Ich kann wirklich nicht 😢";
+                    decisionHint.innerText = "Na gut, wenn es wirklich nicht geht...";
+                    declineBtn.classList.add('border-red-300', 'text-red-700');
+                }, 300);
+            }
+        }
+
+        // Event Listener für Maus und Touch
+        declineBtn.addEventListener('mouseenter', runAway);
+        declineBtn.addEventListener('touchstart', runAway, { passive: false });
+
+        // Regulärer Klick auf Absage nach dem Gag
+        declineBtn.addEventListener('click', (e) => {
+            if (dodgeCount < maxDodges) {
+                e.preventDefault();
+                runAway(e);
+                return;
+            }
+            selectDecline();
+        });
+
+        // Klick auf Zusage
+        acceptBtn.addEventListener('click', selectAccept);
+
+        function selectAccept() {
+            attendanceStatus.value = "attending";
+            acceptBtn.classList.remove('bg-sage-700', 'text-white');
+            acceptBtn.classList.add('bg-sage-800', 'ring-4', 'ring-sage-300', 'text-white');
+            
+            declineBtn.classList.remove('ring-4', 'ring-red-200', 'bg-red-50');
+            declineBtn.style.transform = "translate(0, 0)";
+            
+            // Felder anzeigen
+            attendanceFields.classList.remove('hidden');
+            decisionHint.innerText = "Wunderbar! Wir freuen uns riesig auf dich!";
+            decisionHint.className = "text-center text-xs text-sage-700 font-semibold mt-2 h-4";
+
+            // Feierliches kleines Konfetti beim Klick auf Zusage
+            confetti({
+                particleCount: 50,
+                spread: 60,
+                origin: { y: 0.7 }
+            });
+        }
+
+        function selectDecline() {
+            attendanceStatus.value = "declined";
+            declineBtn.classList.add('ring-4', 'ring-red-200', 'bg-red-50');
+            acceptBtn.classList.remove('ring-4', 'ring-sage-300', 'bg-sage-800');
+            acceptBtn.classList.add('bg-sage-700');
+            
+            // Zusage-Felder ausblenden
+            attendanceFields.classList.add('hidden');
+            // Begleitung-Pflichtfeld deaktivieren
+            plusOneNameInput.required = false;
+            plusOneNameInput.value = "";
+
+            decisionHint.innerText = "Sehr schade! Wir werden dich vermissen.";
+            decisionHint.className = "text-center text-xs text-warmgray/60 italic mt-2 h-4";
+        }
+
+        // Toggle Begleitung (+1)
+        const partnerRadios = document.querySelectorAll('input[name="hasPlusOne"]');
+        partnerRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.value === 'yes') {
+                    plusOneContainer.classList.remove('hidden');
+                    plusOneNameInput.required = true;
+                } else {
+                    plusOneContainer.classList.add('hidden');
+                    plusOneNameInput.required = false;
+                    plusOneNameInput.value = '';
+                }
+            });
+        });
+
+        // -------------------------------------------------------------
+        // 3. FAQ ACCORDION
+        // -------------------------------------------------------------
+        function toggleFaq(btn) {
+            const content = btn.nextElementSibling;
+            const icon = btn.querySelector('span:last-child');
+            const isHidden = content.classList.contains('hidden');
+
+            // Schließe alle anderen offenen FAQs für ein sauberes Akkordeon
+            document.querySelectorAll('#faq .border').forEach(item => {
+                item.querySelector('div:last-child').classList.add('hidden');
+                item.querySelector('span:last-child').innerText = '+';
+                item.querySelector('span:last-child').classList.remove('rotate-45');
+            });
+
+            if (isHidden) {
+                content.classList.remove('hidden');
+                icon.innerText = '−';
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 4. FORM SUBMIT & WEBHOOK INTEGRATION
+        // -------------------------------------------------------------
+        const form = document.getElementById('weddingRsvpForm');
+        const modal = document.getElementById('successModal');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Prüfen, ob eine Entscheidung (Zusage/Absage) gewählt wurde
+            if (!attendanceStatus.value) {
+                decisionHint.innerText = "Bitte wähle oben aus, ob du dabei bist oder nicht.";
+                decisionHint.className = "text-center text-xs text-red-600 font-bold mt-2 h-4 animate-bounce";
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Wird übermittelt...";
+
+            const payload = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                attendance: attendanceStatus.value,
+                hasPlusOne: attendanceStatus.value === 'attending' ? (document.querySelector('input[name="hasPlusOne"]:checked')?.value === 'yes') : false,
+                plusOneName: document.getElementById('plusOneName')?.value || '',
+                songRequest: document.getElementById('songRequest')?.value || '',
+                message: document.getElementById('personalMessage').value,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                /*
+                 * HINWEIS ZUR INTEGRATION:
+                 * Hier kann die echte URL eines Webhooks hinterlegt werden (z. B. Formspree, Make, Zapier oder Google Apps Script):
+                 * const response = await fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec", {
+                 *     method: "POST",
+                 *     headers: { "Content-Type": "application/json" },
+                 *     body: JSON.stringify(payload)
+                 * });
+                 */
+
+                // Wir simulieren den Server-Call mit kurzer Verzögerung:
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                // UI-Rückmeldung anpassen
+                if (payload.attendance === 'attending') {
+                    document.getElementById('modalIcon').innerText = "🎉";
+                    document.getElementById('modalTitle').innerText = "Wir freuen uns auf dich!";
+                    document.getElementById('modalMessage').innerText = `Danke für deine Zusage, ${payload.fullName}! Wir haben deine Rückmeldung notiert und halten dich per E-Mail auf dem Laufenden.`;
+                    
+                    // Großes Jubel-Konfetti
+                    confetti({
+                        particleCount: 120,
+                        spread: 80,
+                        origin: { y: 0.6 }
+                    });
+                } else {
+                    document.getElementById('modalIcon').innerText = "💌";
+                    document.getElementById('modalTitle').innerText = "Danke für deine Rückmeldung";
+                    document.getElementById('modalMessage').innerText = `Schade, dass du nicht dabei sein kannst, ${payload.fullName}. Wir trinken ein Glas auf dich mit!`;
+                }
+
+                modal.classList.remove('hidden');
+                form.reset();
+                attendanceStatus.value = "";
+                attendanceFields.classList.add('hidden');
+                acceptBtn.classList.remove('ring-4', 'ring-sage-300', 'bg-sage-800');
+                acceptBtn.classList.add('bg-sage-700');
+                declineBtn.classList.remove('ring-4', 'ring-red-200', 'bg-red-50', 'border-red-300', 'text-red-700');
+                declineBtnText.innerText = "Ich kann leider nicht";
+                dodgeCount = 0;
+                decisionHint.innerText = "";
+
+            } catch (err) {
+                console.error("Fehler beim Senden:", err);
+                decisionHint.innerText = "Übertragungsfehler. Bitte versuche es erneut.";
+                decisionHint.className = "text-center text-xs text-red-600 font-medium mt-2 h-4";
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalBtnText;
+            }
+        });
+
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
