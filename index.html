@@ -390,48 +390,94 @@
     </div>
 
     <!-- JAVASCRIPT LOGIK -->
-    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
-        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxXWvS0_lOxBkzLJ--NZ5UexA9yTQ8eAtQGComJMlLGKqdt4F37uVG4-teCF12GPM8/exec';
+        const SUPABASE_CONFIG = {
+            url: window.SUPABASE_CONFIG?.url || "https://pybtysgohtriveielehl.supabase.co",
+            anonKey: window.SUPABASE_CONFIG?.anonKey || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5YnR5c2dvaHRyaXZlaWVsZWhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxMzU4NDIsImV4cCI6MjEwODcxMTg0Mn0.6XoASBhw2qbeN-Ah3A30OWy_hrEUQ45ZH8qO6ZqPAFQ",
+            table: window.SUPABASE_CONFIG?.table || "rsvp_responses"
+        };
 
-        async function submitToGoogleSheet(payload) {
-            if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL.includes('PASTE_YOUR_')) {
-                console.info('Google Sheets is not configured yet. Payload ready to send:', payload);
-                return { ok: true, simulated: true };
+        function isSupabaseConfigValid(config) {
+            if (!config || typeof config !== "object") return false;
+            const hasUrl = typeof config.url === "string" && config.url.startsWith("https://") && !config.url.includes("YOUR_PROJECT_ID");
+            const hasKey = typeof config.anonKey === "string" && config.anonKey.length > 20 && !config.anonKey.includes("YOUR_SUPABASE_ANON_KEY");
+            return hasUrl && hasKey;
+        }
+
+        function createSupabaseClient() {
+            if (!window.supabase || typeof window.supabase.createClient !== "function") {
+                throw new Error("Supabase-Bibliothek konnte nicht geladen werden. Bitte Seite neu laden.");
             }
 
-            const response = await fetch(GOOGLE_SHEETS_URL, {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
+            if (!isSupabaseConfigValid(SUPABASE_CONFIG)) {
+                throw new Error("Supabase-Konfiguration fehlt oder ist ungueltig. Bitte URL und anon Key korrekt setzen.");
+            }
 
-            const responseText = await response.text();
-
-            if (!response.ok) {
-                console.error('Google Apps Script request failed', {
-                    status: response.status,
-                    statusText: response.statusText,
-                    url: GOOGLE_SHEETS_URL,
-                    responseText: responseText.slice(0, 500)
-                });
-
-                if (response.status === 403) {
-                    throw new Error('Google Apps Script rejected the request with 403. Check deployment permissions and the published web app URL.');
+            return window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey, {
+                auth: {
+                    persistSession: false,
+                    autoRefreshToken: false,
+                    detectSessionInUrl: false
                 }
+            });
+        }
 
-                throw new Error(`Google Sheets request failed: ${response.status}`);
+        function normalizeRsvpPayload(payload) {
+            const attendanceStatus = payload.attendance === "declined" ? "declined" : "attending";
+            const hasPlusOne = attendanceStatus === "attending" ? Boolean(payload.hasPlusOne) : false;
+            const plusOneName = hasPlusOne ? (payload.plusOneName || "").trim() : null;
+
+            return {
+                full_name: (payload.fullName || "").trim(),
+                email: (payload.email || "").trim().toLowerCase(),
+                phone: (payload.phone || "").trim() || null,
+                attendance_status: attendanceStatus,
+                has_plus_one: hasPlusOne,
+                plus_one_name: plusOneName || null,
+                song_request: (payload.songRequest || "").trim() || null,
+                message: (payload.message || "").trim() || null,
+                client_timestamp: payload.timestamp || new Date().toISOString()
+            };
+        }
+
+        function mapSupabaseError(error) {
+            const message = String(error?.message || "").toLowerCase();
+
+            if (error?.code === "42501" || message.includes("row-level security") || message.includes("permission denied")) {
+                return "Der Zugriff auf die RSVP-Tabelle wurde durch RLS blockiert. Bitte Supabase Policy pruefen.";
             }
 
-            try {
-                return JSON.parse(responseText);
-            } catch (error) {
-                return { ok: true, raw: responseText };
+            if (error?.code === "42P01" || (message.includes("relation") && message.includes("does not exist"))) {
+                return "Die konfigurierte RSVP-Tabelle wurde nicht gefunden. Bitte Tabellenname und Schema pruefen.";
             }
+
+            if (message.includes("invalid api key") || message.includes("jwt") || message.includes("unauthorized") || message.includes("forbidden")) {
+                return "Supabase-Anmeldedaten sind ungueltig. Bitte anon Key und Projekt-URL pruefen.";
+            }
+
+            if (message.includes("failed to fetch") || message.includes("network")) {
+                return "Netzwerkfehler beim Senden. Bitte Verbindung und Supabase-URL pruefen.";
+            }
+
+            return null;
+        }
+
+        async function submitToSupabase(payload) {
+            const client = createSupabaseClient();
+            const row = normalizeRsvpPayload(payload);
+            const { error } = await client.from(SUPABASE_CONFIG.table).insert([row]);
+
+            if (error) {
+                const mappedMessage = mapSupabaseError(error);
+                if (mappedMessage) {
+                    throw new Error(mappedMessage);
+                }
+                throw new Error("RSVP konnte nicht gespeichert werden. Bitte spaeter erneut versuchen.");
+            }
+
+            return { ok: true };
         }
 
         const translations = {
@@ -770,7 +816,7 @@
             };
             try {
                 await new Promise((resolve) => setTimeout(resolve, 800));
-                await submitToGoogleSheet(payload);
+                await submitToSupabase(payload);
                 if (payload.attendance === 'attending') {
                     document.getElementById('modalIcon').innerText = '🎉';
                     document.getElementById('modalTitle').innerText = getTranslation('rsvp.successTitle');
@@ -793,8 +839,8 @@
                 decisionHint.innerText = '';
             } catch (error) {
                 console.error('Fehler beim Senden:', error);
-                const message = error && error.message && error.message.includes('403')
-                    ? 'Google Apps Script blockiert den Zugriff (403). Prüfe die Freigabe der Web-App und die veröffentlichte URL.'
+                const message = error && error.message
+                    ? error.message
                     : getTranslation('rsvp.transferError');
                 decisionHint.innerText = message;
                 decisionHint.className = 'text-center text-xs text-red-600 font-medium mt-2 h-4';
