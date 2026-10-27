@@ -392,6 +392,33 @@
     <!-- JAVASCRIPT LOGIK -->
     
     <script>
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxXWvS0_lOxBkzLJ--NZ5UexA9yTQ8eAtQGComJMlLGKqdt4F37uVG4-teCF12GPM8/exec';
+
+        async function submitToGoogleSheet(payload) {
+            if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL.includes('PASTE_YOUR_')) {
+                console.info('Google Sheets is not configured yet. Payload ready to send:', payload);
+                return { ok: true, simulated: true };
+            }
+
+            const response = await fetch(GOOGLE_SHEETS_URL, {
+                method: 'POST',
+                mode: 'cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Google Sheets request failed: ${response.status}`);
+            }
+
+            const responseText = await response.text();
+            try {
+                return JSON.parse(responseText);
+            } catch (error) {
+                return { ok: true, raw: responseText };
+            }
+        }
+
         const translations = {
             de: {
                 nav: { details: 'Ablauf', locations: 'Locations', info: 'Infos', rsvp: 'RSVP', faq: 'FAQ', cta: 'RÜCKMELDUNG' },
@@ -728,6 +755,7 @@
             };
             try {
                 await new Promise((resolve) => setTimeout(resolve, 800));
+                await submitToGoogleSheet(payload);
                 if (payload.attendance === 'attending') {
                     document.getElementById('modalIcon').innerText = '🎉';
                     document.getElementById('modalTitle').innerText = getTranslation('rsvp.successTitle');
