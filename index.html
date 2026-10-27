@@ -403,15 +403,30 @@
             const response = await fetch(GOOGLE_SHEETS_URL, {
                 method: 'POST',
                 mode: 'cors',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
                 body: JSON.stringify(payload)
             });
 
+            const responseText = await response.text();
+
             if (!response.ok) {
+                console.error('Google Apps Script request failed', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    url: GOOGLE_SHEETS_URL,
+                    responseText: responseText.slice(0, 500)
+                });
+
+                if (response.status === 403) {
+                    throw new Error('Google Apps Script rejected the request with 403. Check deployment permissions and the published web app URL.');
+                }
+
                 throw new Error(`Google Sheets request failed: ${response.status}`);
             }
 
-            const responseText = await response.text();
             try {
                 return JSON.parse(responseText);
             } catch (error) {
@@ -778,7 +793,10 @@
                 decisionHint.innerText = '';
             } catch (error) {
                 console.error('Fehler beim Senden:', error);
-                decisionHint.innerText = getTranslation('rsvp.transferError');
+                const message = error && error.message && error.message.includes('403')
+                    ? 'Google Apps Script blockiert den Zugriff (403). Prüfe die Freigabe der Web-App und die veröffentlichte URL.'
+                    : getTranslation('rsvp.transferError');
+                decisionHint.innerText = message;
                 decisionHint.className = 'text-center text-xs text-red-600 font-medium mt-2 h-4';
             } finally {
                 submitBtn.disabled = false;
