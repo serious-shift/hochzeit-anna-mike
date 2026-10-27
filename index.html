@@ -139,19 +139,11 @@
         <!-- 2. EINBLICKE -->
         <section class="py-16 px-6">
             <div class="max-w-5xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <article class="rounded-3xl border border-sage-100 bg-white/80 shadow-sm overflow-hidden">
-                        <div class="aspect-[4/5]">
-                            <img src="IMG_1713.jpg" alt="Anna und Mike in einem gemeinsamen Moment" loading="lazy" class="w-full h-full object-cover">
-                        </div>
-                    </article>
-
-                    <article class="rounded-3xl border border-sage-100 bg-white/80 shadow-sm overflow-hidden">
-                        <div class="aspect-[4/5]">
-                            <img src="IMG_9803.jpg" alt="Anna und Mike lachend zusammen" loading="lazy" class="w-full h-full object-cover">
-                        </div>
-                    </article>
-                </div>
+                <article class="rounded-3xl border border-sage-100 bg-white/80 shadow-sm overflow-hidden">
+                    <div class="aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9]">
+                        <img src="IMG_9803.jpg" alt="Anna und Mike lachend zusammen" loading="lazy" class="w-full h-full object-cover">
+                    </div>
+                </article>
             </div>
         </section>
 
@@ -344,7 +336,27 @@
                 <!-- FAQ 3 -->
                 <div class="border border-sage-200 rounded-2xl bg-white overflow-hidden transition-all">
                     <button id="faq3Btn" class="w-full p-5 text-left font-serif text-lg font-semibold text-sage-900 flex justify-between items-center focus:outline-none" onclick="toggleFaq(this)"><span>An wen kann ich mich wenden, wenn ich Fragen habe?</span><span class="text-sage-500 transform transition-transform duration-200 text-xl">+</span></button>
-                    <div id="faq3Answer" class="faq-answer px-5 pb-5 text-xs sm:text-sm text-warmgray/75 hidden leading-relaxed border-t border-sage-100 pt-3">Wir sind immer für euch erreichbar. Bei besonderen Anliegen stehen auch gerne unsere Trauzeugen zur Verfügung.<div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3"><div class="rounded-xl border border-sage-200 bg-sage-50/60 p-3"><p class="text-xs sm:text-sm font-semibold text-sage-900">Braut Anna</p><a href="tel:+491701234567" class="mt-1 inline-block text-xs sm:text-sm text-sage-700 underline decoration-sage-400 underline-offset-2 hover:text-sage-900 transition-colors">+49 170 2889592</a></div><div class="rounded-xl border border-sage-200 bg-sage-50/60 p-3"><p class="text-xs sm:text-sm font-semibold text-sage-900">Bräutigam Mike</p><a href="tel:+491769876543" class="mt-1 inline-block text-xs sm:text-sm text-sage-700 underline decoration-sage-400 underline-offset-2 hover:text-sage-900 transition-colors">+49 171 5890863</a></div><div class="rounded-xl border border-sage-200 bg-sage-50/60 p-3"><p class="text-xs sm:text-sm font-semibold text-sage-900">Trauzeugin Angelika</p><a href="tel:+491769876543" class="mt-1 inline-block text-xs sm:text-sm text-sage-700 underline decoration-sage-400 underline-offset-2 hover:text-sage-900 transition-colors">+49 163 5248101</a></div><div class="rounded-xl border border-sage-200 bg-sage-50/60 p-3"><p class="text-xs sm:text-sm font-semibold text-sage-900">Trauzeuge Marius</p><a href="tel:+491769876543" class="mt-1 inline-block text-xs sm:text-sm text-sage-700 underline decoration-sage-400 underline-offset-2 hover:text-sage-900 transition-colors">+49 170 7827557</a></div></div></div>
+                    <div id="faq3Answer" class="faq-answer px-5 pb-5 text-xs sm:text-sm text-warmgray/75 hidden leading-relaxed border-t border-sage-100 pt-3">
+                        <p id="faq3AnswerText" class="mb-4">Wir sind immer für euch erreichbar. Bei besonderen Anliegen stehen auch gerne unsere Trauzeugen zur Verfügung.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="rounded-xl border border-sage-200 bg-sage-50/60 p-3">
+                                <p id="faq3ContactAnnaName" class="text-xs sm:text-sm font-semibold text-sage-900">Braut Anna</p>
+                                <a href="tel:+491702889592" class="mt-1 inline-block text-xs sm:text-sm text-sage-700 underline decoration-sage-400 underline-offset-2 hover:text-sage-900 transition-colors">+49 170 2889592</a>
+                            </div>
+                            <div class="rounded-xl border border-sage-200 bg-sage-50/60 p-3">
+                                <p id="faq3ContactMikeName" class="text-xs sm:text-sm font-semibold text-sage-900">Bräutigam Mike</p>
+                                <a href="tel:+491715890863" class="mt-1 inline-block text-xs sm:text-sm text-sage-700 underline decoration-sage-400 underline-offset-2 hover:text-sage-900 transition-colors">+49 171 5890863</a>
+                            </div>
+                            <div class="rounded-xl border border-sage-200 bg-sage-50/60 p-3">
+                                <p id="faq3ContactAngelikaName" class="text-xs sm:text-sm font-semibold text-sage-900">Trauzeugin Angelika</p>
+                                <a href="tel:+491635248101" class="mt-1 inline-block text-xs sm:text-sm text-sage-700 underline decoration-sage-400 underline-offset-2 hover:text-sage-900 transition-colors">+49 163 5248101</a>
+                            </div>
+                            <div class="rounded-xl border border-sage-200 bg-sage-50/60 p-3">
+                                <p id="faq3ContactMariusName" class="text-xs sm:text-sm font-semibold text-sage-900">Trauzeuge Marius</p>
+                                <a href="tel:+491707827557" class="mt-1 inline-block text-xs sm:text-sm text-sage-700 underline decoration-sage-400 underline-offset-2 hover:text-sage-900 transition-colors">+49 170 7827557</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -386,7 +398,7 @@
                 hero: { badge: 'Wir sagen Ja!', date: '20. März 2027 • Kaiserpfalz, Goslar', lead: 'Wir können es kaum erwarten, den schönsten Tag unseres Lebens gemeinsam mit den Menschen zu feiern, die uns am meisten bedeuten.', countdown: { days: 'Tage', hours: 'Std', minutes: 'Min', seconds: 'Sek' } },
                 locations: { eyebrow: 'Wo & Wann', title: 'Die Locations', weddingTag: 'Standesamtliche Trauung', weddingTitle: 'Standesamt in der Kaiserpfalz', weddingAddress: 'Kaiserbleek, 38640 Goslar<br>Parkmöglichkeiten stehen Ihnen direkt vor Ort zur Verfügung.', weddingTime: 'Beginn: 10:00 Uhr', partyTag: 'Empfang & Feier', partyTitle: 'Schützenhaus Sudmerberg', partyAddress: 'Bergknick 6, 38640 Goslar<br>Direkt am Haus stehen ca. 10 Parkplätze zur Verfügung.', partyTime: 'Ab: 16:30 Uhr', dresscodeTitle: 'Dresscode', dresscodeText: '<strong>Festlich-Elegant</strong> Wir möchten, dass ihr euch in euren Outfits wohlfühlt. Seid bitte trotzdem schick angezogen. T-Shirts mit Edeka Logo z.B. werden nicht toleriert.', dresscodeAvoid: 'Bitte vermeidet folgende Farben:', dresscodeWhite: 'Weiß', dresscodeGreen: 'Salbeigrün', giftTitle: 'Geschenkwunsch', giftText: 'Das größte Geschenk ist eure Anwesenheit. Wer uns dennoch etwas schenken möchte, hilft uns dabei, unsere <strong>Flitterwochenkasse</strong> aufzubessern!' },
                 rsvp: { eyebrow: 'Rückmeldung', title: 'Bist du dabei?', subtitle: 'Bitte gib uns bis zum <strong>01. Januar 2027</strong> Bescheid, damit wir entsprechend planen können.', fullName: 'Vor- und Nachname *', email: 'E-Mail-Adresse *', phone: 'Telefonnummer', decision: 'Deine Rückmeldung *', accept: 'Ich bin dabei!', decline: 'Ich kann leider nicht', plusOneQuestion: 'Bringst du deine bessere Hälfte mit?', plusOneNo: 'Nein, ich komme alleine', plusOneYes: 'Ja, mit Begleitung (+1)', plusOneName: 'Vor- und Nachname der Begleitung *', song: 'Musikwunsch 🎵', personalMessage: 'Persönliche Nachricht (optional)', submit: 'Antwort absenden', placeholderFullName: 'z. B. Max Mustermann', placeholderEmail: 'max@beispiel.de', placeholderPhone: '+49 170 1234567', placeholderPlusOne: 'Name deiner Begleitung', placeholderSong: 'Welcher Song bringt dich garantiert auf die Tanzfläche?', placeholderMessage: 'Liebe Anna, lieber Mike...', decisionRequired: 'Bitte wähle oben aus, ob du dabei bist oder nicht.', acceptHint: 'Wunderbar! Wir freuen uns riesig auf dich!', declineHint: 'Sehr schade! Wir werden dich vermissen.', successTitle: 'Wir freuen uns auf dich!', successText: (name) => `Danke für deine Zusage, ${name}! Wir haben deine Rückmeldung notiert und halten dich per E-Mail auf dem Laufenden.`, declineTitle: 'Danke für deine Rückmeldung', declineText: (name) => `Schade, dass du nicht dabei sein kannst, ${name}. Wir trinken ein Glas auf dich mit!`, close: 'Schließen', loading: 'Wird übermittelt...', transferError: 'Übertragungsfehler. Bitte versuche es erneut.' },
-                faq: { eyebrow: 'Fragen & Antworten', title: 'Häufige Fragen', q1: 'Gibt es Parkplätze vor Ort?', a1: 'Ja, direkt an der Location, aber wir hoffen, ihr kommt nicht mit dem Auto, denn der Fußbus fährt immer.', q2: 'Wird es was zu essen geben?', a2: 'Natürlich! Bei uns geht keiner hungrig oder durstig nach Hause. (Auch für Vegetarier)', q3: 'An wen kann ich mich wenden, wenn ich Fragen habe?', a3: 'Wir sind immer für euch erreichbar. Bei besonderen Anliegen stehen auch gerne unsere Trauzeugen zur Verfügung.' },
+                faq: { eyebrow: 'Fragen & Antworten', title: 'Häufige Fragen', q1: 'Gibt es Parkplätze vor Ort?', a1: 'Ja, direkt an der Location, aber wir hoffen, ihr kommt nicht mit dem Auto, denn der Fußbus fährt immer.', q2: 'Wird es was zu essen geben?', a2: 'Natürlich! Bei uns geht keiner hungrig oder durstig nach Hause. (Auch für Vegetarier)', q3: 'An wen kann ich mich wenden, wenn ich Fragen habe?', a3: 'Wir sind immer für euch erreichbar. Bei besonderen Anliegen stehen auch gerne unsere Trauzeugen zur Verfügung.', contact: { anna: 'Braut Anna', mike: 'Bräutigam Mike', angelika: 'Trauzeugin Angelika', marius: 'Trauzeuge Marius' } },
                 footer: { brand: 'Anna & Mike', date: '20. März 2027 • Goslar', note: 'Mit Liebe gestaltet für unseren besonderen Tag ♡' },
                 music: { on: '♪ Musik aus', off: '♪ Musik an' }
             },
@@ -395,7 +407,7 @@
                 hero: { badge: 'Mówimy tak!', date: '20 marca 2027 • Kaiserpfalz, Goslar', lead: 'Nie możemy się doczekać, by wspólnie świętować ten najpiękniejszy dzień naszego życia z ludźmi, którzy są nam najbliżsi.', countdown: { days: 'Dni', hours: 'Godz', minutes: 'Min', seconds: 'Sek' } },
                 locations: { eyebrow: 'Gdzie i kiedy', title: 'Miejsca', weddingTag: 'Ceremonia ślubna', weddingTitle: 'Urząd stanu cywilnego w Kaiserpfalz', weddingAddress: 'Kaiserbleek, 38640 Goslar<br>Parking dostępny jest bezpośrednio na miejscu.', weddingTime: 'Początek: 10:00', partyTag: 'Przyjęcie i wesele', partyTitle: 'Schützenhaus Sudmerberg', partyAddress: 'Bergknick 6, 38640 Goslar<br>Na miejscu dostępnych jest ok. 10 miejsc parkingowych.', partyTime: 'Początek: 16:30', dresscodeTitle: 'Dress code', dresscodeText: '<strong>Uroczysto-elegancki</strong> Chcemy, abyście czuli się swobodnie w swoich stylizacjach. Prosimy jednak o schludny i elegancki strój. T-shirty z logiem Edeka, np., nie są akceptowane.', dresscodeAvoid: 'Prosimy unikać następujących kolorów:', dresscodeWhite: 'Biały', dresscodeGreen: 'Szałwiowy', giftTitle: 'Życzenie prezentowe', giftText: 'Największym prezentem jest Wasza obecność. Jeżeli jednak chcielibyście nam coś podarować, pomożecie nam uzupełnić naszą <strong>kasę na miesiąc miodowy</strong>!' },
                 rsvp: { eyebrow: 'Potwierdzenie', title: 'Czy weźmiesz udział?', subtitle: 'Prosimy o odpowiedź do <strong>1 stycznia 2027</strong>, abyśmy mogli odpowiednio zaplanować wydarzenie.', fullName: 'Imię i nazwisko *', email: 'Adres e-mail *', phone: 'Numer telefonu', decision: 'Twoja odpowiedź *', accept: 'Biorę udział!', decline: 'Niestety nie mogę', plusOneQuestion: 'Czy przyprowadzisz swoją drugą połowę?', plusOneNo: 'Nie, przychodzę sam(a)', plusOneYes: 'Tak, z towarzyszem (+1)', plusOneName: 'Imię i nazwisko towarzysza *', song: 'Prośba o utwór 🎵', personalMessage: 'Wiadomość osobista (opcjonalnie)', submit: 'Wyślij odpowiedź', placeholderFullName: 'np. Jan Kowalski', placeholderEmail: 'jan@przyklad.pl', placeholderPhone: '+48 500 123 456', placeholderPlusOne: 'Imię i nazwisko towarzysza', placeholderSong: 'Jaki utwór na pewno wciągnie was na parkiet?', placeholderMessage: 'Kochana Anno, drogi Mike...', decisionRequired: 'Proszę wybrać, czy bierzesz udział, czy nie.', acceptHint: 'Świetnie! Bardzo się cieszymy, że będziesz z nami!', declineHint: 'Szkoda! Będziemy za Tobą tęsknić.', successTitle: 'Bardzo się cieszymy!', successText: (name) => `Dziękujemy za potwierdzenie, ${name}! Odnotowaliśmy Twoją odpowiedź i będziemy utrzymywać kontakt mailowo.`, declineTitle: 'Dziękujemy za odpowiedź', declineText: (name) => `Szkoda, że nie możesz być z nami, ${name}. Wypijemy za Ciebie kieliszek!`, close: 'Zamknij', loading: 'Wysyłanie...', transferError: 'Błąd przesyłania. Spróbuj ponownie.' },
-                faq: { eyebrow: 'Pytania i odpowiedzi', title: 'Najczęstsze pytania', q1: 'Czy jest parking na miejscu?', a1: 'Tak, bezpośrednio przy obiekcie, ale mamy nadzieję, że nie przyjedziecie samochodem, bo autobus pieszy zawsze jeździ.', q2: 'Czy będzie jedzenie?', a2: 'Oczywiście! U nas nikt nie wróci głodny ani spragniony. (Także dla wegetarian)', q3: 'Do kogo mogę się zwrócić w razie pytań?', a3: 'Jesteśmy zawsze dla was dostępni. W sprawach specjalnych chętnie pomogą także nasi świadkowie.' },
+                faq: { eyebrow: 'Pytania i odpowiedzi', title: 'Najczęstsze pytania', q1: 'Czy jest parking na miejscu?', a1: 'Tak, bezpośrednio przy obiekcie, ale mamy nadzieję, że nie przyjedziecie samochodem, bo autobus pieszy zawsze jeździ.', q2: 'Czy będzie jedzenie?', a2: 'Oczywiście! U nas nikt nie wróci głodny ani spragniony. (Także dla wegetarian)', q3: 'Do kogo mogę się zwrócić w razie pytań?', a3: 'Jesteśmy zawsze dla Was dostępni. W sprawach specjalnych chętnie pomogą także nasi świadkowie.', contact: { anna: 'Panna Młoda Anna', mike: 'Pan Młody Mike', angelika: 'Świadkowa Angelika', marius: 'Świadek Marius' } },
                 footer: { brand: 'Anna & Mike', date: '20 marca 2027 • Goslar', note: 'Stworzone z miłością na nasz wyjątkowy dzień ♡' },
                 music: { on: '♪ Muzyka wyłączona', off: '♪ Muzyka włączona' }
             }
@@ -503,7 +515,11 @@
             });
             setText('faq1Answer', getTranslation('faq.a1'));
             setText('faq2Answer', getTranslation('faq.a2'));
-            setText('faq3Answer', getTranslation('faq.a3'));
+            setText('faq3AnswerText', getTranslation('faq.a3'));
+            setText('faq3ContactAnnaName', getTranslation('faq.contact.anna'));
+            setText('faq3ContactMikeName', getTranslation('faq.contact.mike'));
+            setText('faq3ContactAngelikaName', getTranslation('faq.contact.angelika'));
+            setText('faq3ContactMariusName', getTranslation('faq.contact.marius'));
 
             setText('footerBrand', getTranslation('footer.brand'));
             setText('footerDate', getTranslation('footer.date'));
