@@ -2,16 +2,16 @@ create table if not exists public.rsvp_responses (
   id bigint generated always as identity primary key,
   created_at timestamptz not null default now(),
   full_name text not null check (char_length(trim(full_name)) >= 2),
-  email text not null check (position('@' in email) > 1),
+  email text not null check (position($$@$$ in email) > 1),
   phone text,
-  attendance_status text not null check (attendance_status in ('attending', 'declined')),
+  attendance_status text not null check (attendance_status in ($$attending$$, $$declined$$)),
   has_plus_one boolean not null default false,
   plus_one_name text,
   song_request text,
   message text,
   client_timestamp timestamptz,
   constraint plus_one_name_consistency check (
-    (has_plus_one = true and char_length(trim(coalesce(plus_one_name, ''))) > 0)
+    (has_plus_one = true and char_length(trim(coalesce(plus_one_name, $$$$))) > 0)
     or has_plus_one = false
   )
 );
@@ -31,5 +31,13 @@ for insert
 to anon
 with check (true);
 
+drop policy if exists rsvp_responses_authenticated_select on public.rsvp_responses;
+create policy rsvp_responses_authenticated_select
+on public.rsvp_responses
+for select
+to authenticated
+using (true);
+
 revoke select, update, delete on public.rsvp_responses from anon;
-revoke select, update, delete on public.rsvp_responses from authenticated;
+revoke insert, update, delete on public.rsvp_responses from authenticated;
+grant select on public.rsvp_responses to authenticated;

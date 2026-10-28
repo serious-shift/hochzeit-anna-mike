@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anna & Mike | Admin Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sage: {
+                            50: "#f4f7f5",
+                            100: "#e5ede8",
+                            200: "#cedfd5",
+                            300: "#a7c6b5",
+                            500: "#5c8a70",
+                            600: "#467057",
+                            700: "#385946",
+                            800: "#2d4737",
+                            900: "#23392c"
+                        },
+                        champagne: {
+                            100: "#faf5ed",
+                            200: "#f4ead6",
+                            300: "#e8d4b3",
+                            500: "#c5a368",
+                            600: "#a68249"
+                        },
+                        cream: "#FDFBF7",
+                        warmgray: "#2C2A29"
+                    },
+                    fontFamily: {
+                        serif: ["\"Cormorant Garamond\"", "serif"],
+                        sans: ["\"Plus Jakarta Sans\"", "sans-serif"]
+                    }
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-cream text-warmgray font-sans antialiased min-h-screen selection:bg-sage-200 selection:text-sage-900">
+    <div class="fixed inset-0 -z-10 overflow-hidden">
+        <div class="absolute -top-36 -left-24 w-96 h-96 bg-sage-100/70 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 -right-24 w-96 h-96 bg-champagne-200/60 rounded-full blur-3xl"></div>
+    </div>
+
+    <header class="border-b border-sage-100 bg-cream/85 backdrop-blur-md">
+        <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+            <div>
+                <p class="text-xs uppercase tracking-[0.25em] text-sage-700 font-semibold">Private Area</p>
+                <h1 class="font-serif text-3xl text-sage-900">RSVP Admin Dashboard</h1>
+            </div>
+            <a href="index.html" class="text-xs sm:text-sm font-semibold text-sage-800 hover:text-sage-600">Zur Hauptseite</a>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+        <div id="configError" class="hidden mb-6 rounded-2xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm"></div>
+
+        <section id="loginCard" class="max-w-lg mx-auto bg-white/95 border border-sage-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+            <div class="text-center mb-6">
+                <span class="text-xs uppercase tracking-[0.2em] text-sage-600 font-semibold">Anmeldung</span>
+                <h2 class="font-serif text-3xl text-sage-900 mt-1">Admin Login</h2>
+                <p class="text-sm text-warmgray/70 mt-2">Melde dich mit deinem Supabase Benutzer an, um RSVPs zu sehen.</p>
+            </div>
+
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="email" class="block text-xs uppercase tracking-wider font-semibold text-sage-800 mb-1.5">E-Mail</label>
+                    <input id="email" name="email" type="email" required autocomplete="email" class="w-full px-4 py-3 rounded-xl border border-sage-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500" placeholder="admin@example.com">
+                </div>
+                <div>
+                    <label for="password" class="block text-xs uppercase tracking-wider font-semibold text-sage-800 mb-1.5">Passwort</label>
+                    <input id="password" name="password" type="password" required autocomplete="current-password" class="w-full px-4 py-3 rounded-xl border border-sage-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500" placeholder="********">
+                </div>
+                <button id="loginBtn" type="submit" class="w-full py-3 rounded-xl bg-sage-800 text-white text-sm font-semibold hover:bg-sage-900 disabled:opacity-60 disabled:cursor-not-allowed">Einloggen</button>
+            </form>
+
+            <p id="loginStatus" class="mt-3 min-h-5 text-sm text-center text-warmgray/80"></p>
+        </section>
+
+        <section id="dashboard" class="hidden space-y-6">
+            <div class="bg-white/95 border border-sage-200 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.2em] text-sage-600 font-semibold">Eingeloggt als</p>
+                    <p id="currentUserEmail" class="text-base sm:text-lg font-semibold text-sage-900">-</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button id="refreshBtn" type="button" class="px-4 py-2 rounded-xl border border-sage-300 text-sage-800 text-sm font-semibold hover:bg-sage-50">Neu laden</button>
+                    <button id="logoutBtn" type="button" class="px-4 py-2 rounded-xl bg-sage-800 text-white text-sm font-semibold hover:bg-sage-900">Logout</button>
+                </div>
+            </div>
+
+            <div class="grid sm:grid-cols-3 gap-4">
+                <article class="bg-white/95 border border-sage-200 rounded-2xl p-4">
+                    <p class="text-xs uppercase tracking-[0.2em] text-sage-600 font-semibold">Total</p>
+                    <p id="kpiTotal" class="mt-2 font-serif text-4xl text-sage-900">0</p>
+                </article>
+                <article class="bg-white/95 border border-sage-200 rounded-2xl p-4">
+                    <p class="text-xs uppercase tracking-[0.2em] text-sage-600 font-semibold">Attending</p>
+                    <p id="kpiAttending" class="mt-2 font-serif text-4xl text-sage-900">0</p>
+                </article>
+                <article class="bg-white/95 border border-sage-200 rounded-2xl p-4">
+                    <p class="text-xs uppercase tracking-[0.2em] text-sage-600 font-semibold">Declined</p>
+                    <p id="kpiDeclined" class="mt-2 font-serif text-4xl text-sage-900">0</p>
+                </article>
+            </div>
+
+            <div class="bg-white/95 border border-sage-200 rounded-3xl p-5 sm:p-6 shadow-sm space-y-4">
+                <div class="flex flex-col md:flex-row md:items-end gap-4">
+                    <div class="flex-1">
+                        <label for="searchInput" class="block text-xs uppercase tracking-wider font-semibold text-sage-800 mb-1.5">Suche Name oder E-Mail</label>
+                        <input id="searchInput" type="text" class="w-full px-4 py-3 rounded-xl border border-sage-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500" placeholder="z. B. Anna oder anna@example.com">
+                    </div>
+                    <div class="w-full md:w-64">
+                        <label for="statusFilter" class="block text-xs uppercase tracking-wider font-semibold text-sage-800 mb-1.5">Status</label>
+                        <select id="statusFilter" class="w-full px-4 py-3 rounded-xl border border-sage-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500">
+                            <option value="all">All</option>
+                            <option value="attending">Attending</option>
+                            <option value="declined">Declined</option>
+                        </select>
+                    </div>
+                    <button id="exportBtn" type="button" class="md:self-end px-4 py-3 rounded-xl bg-champagne-500 text-white text-sm font-semibold hover:bg-champagne-600">CSV Export</button>
+                </div>
+
+                <p id="dashboardStatus" class="text-sm text-warmgray/80 min-h-5"></p>
+
+                <div class="overflow-auto border border-sage-100 rounded-2xl">
+                    <table class="min-w-[1250px] w-full text-sm">
+                        <thead class="bg-sage-50 text-sage-800">
+                            <tr>
+                                <th class="text-left px-3 py-3 font-semibold">created_at</th>
+                                <th class="text-left px-3 py-3 font-semibold">full_name</th>
+                                <th class="text-left px-3 py-3 font-semibold">email</th>
+                                <th class="text-left px-3 py-3 font-semibold">phone</th>
+                                <th class="text-left px-3 py-3 font-semibold">attendance_status</th>
+                                <th class="text-left px-3 py-3 font-semibold">has_plus_one</th>
+                                <th class="text-left px-3 py-3 font-semibold">plus_one_name</th>
+                                <th class="text-left px-3 py-3 font-semibold">song_request</th>
+                                <th class="text-left px-3 py-3 font-semibold">message</th>
+                            </tr>
+                        </thead>
+                        <tbody id="responsesBody" class="divide-y divide-sage-100 bg-white"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const SUPABASE_CONFIG = {
+            url: window.SUPABASE_CONFIG?.url || "https://pybtysgohtriveielehl.supabase.co",
+            anonKey: window.SUPABASE_CONFIG?.anonKey || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5YnR5c2dvaHRyaXZlaWVsZWhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxMzU4NDIsImV4cCI6MjEwODcxMTg0Mn0.6XoASBhw2qbeN-Ah3A30OWy_hrEUQ45ZH8qO6ZqPAFQ",
+            table: window.SUPABASE_CONFIG?.table || "rsvp_responses"
+        };
+
+        function isSupabaseConfigValid(config) {
+            if (!config || typeof config !== "object") return false;
+            const hasValidUrl = typeof config.url === "string" && config.url.startsWith("https://") && !config.url.includes("YOUR_PROJECT_ID");
+            const hasValidKey = typeof config.anonKey === "string" && config.anonKey.length > 20 && !config.anonKey.includes("YOUR_SUPABASE_ANON_KEY");
+            return hasValidUrl && hasValidKey;
+        }
+
+        function createSupabaseClient() {
+            if (!window.supabase || typeof window.supabase.createClient !== "function") {
+                throw new Error("Supabase JS library could not be loaded.");
+            }
+            if (!isSupabaseConfigValid(SUPABASE_CONFIG)) {
+                throw new Error("Supabase configuration is missing or still uses placeholders.");
+            }
+            return window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey, {
+                auth: {
+                    persistSession: true,
+                    autoRefreshToken: true,
+                    detectSessionInUrl: true
+                }
+            });
+        }
+
+        const loginCard = document.getElementById("loginCard");
+        const dashboard = document.getElementById("dashboard");
+        const loginForm = document.getElementById("loginForm");
+        const loginBtn = document.getElementById("loginBtn");
+        const loginStatus = document.getElementById("loginStatus");
+        const dashboardStatus = document.getElementById("dashboardStatus");
+        const configError = document.getElementById("configError");
+        const currentUserEmail = document.getElementById("currentUserEmail");
+        const responsesBody = document.getElementById("responsesBody");
+        const searchInput = document.getElementById("searchInput");
+        const statusFilter = document.getElementById("statusFilter");
+        const exportBtn = document.getElementById("exportBtn");
+        const refreshBtn = document.getElementById("refreshBtn");
+        const logoutBtn = document.getElementById("logoutBtn");
+
+        let supabaseClient = null;
+        let allRows = [];
+        let filteredRows = [];
+
+        function setLoginStatus(message, isError = false) {
+            loginStatus.textContent = message || "";
+            loginStatus.className = isError
+                ? "mt-3 min-h-5 text-sm text-center text-red-700"
+                : "mt-3 min-h-5 text-sm text-center text-warmgray/80";
+        }
+
+        function setDashboardStatus(message, isError = false) {
+            dashboardStatus.textContent = message || "";
+            dashboardStatus.className = isError
+                ? "text-sm text-red-700 min-h-5"
+                : "text-sm text-warmgray/80 min-h-5";
+        }
+
+        function setLoadingLogin(isLoading) {
+            loginBtn.disabled = isLoading;
+            loginBtn.textContent = isLoading ? "Authenticating..." : "Einloggen";
+        }
+
+        function setDashboardVisibility(isLoggedIn, userEmail = "-") {
+            if (isLoggedIn) {
+                loginCard.classList.add("hidden");
+                dashboard.classList.remove("hidden");
+                currentUserEmail.textContent = userEmail;
+            } else {
+                dashboard.classList.add("hidden");
+                loginCard.classList.remove("hidden");
+                currentUserEmail.textContent = "-";
+                allRows = [];
+                filteredRows = [];
+                renderRows([]);
+                updateKpis([]);
+            }
+        }
+
+        function escapeCsvValue(value) {
+            const text = value == null ? "" : String(value);
+            const escaped = text.replaceAll("\"", "\"\"");
+            return "\"" + escaped + "\"";
+        }
+
+        function exportFilteredToCsv() {
+            const headers = [
+                "created_at",
+                "full_name",
+                "email",
+                "phone",
+                "attendance_status",
+                "has_plus_one",
+                "plus_one_name",
+                "song_request",
+                "message"
+            ];
+
+            const lines = [headers.join(",")];
+            for (const row of filteredRows) {
+                const line = headers.map((key) => escapeCsvValue(row[key])).join(",");
+                lines.push(line);
+            }
+
+            const csv = lines.join("\n");
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const now = new Date();
+            const stamp = now.toISOString().slice(0, 19).replaceAll(":", "-");
+            const anchor = document.createElement("a");
+            anchor.href = url;
+            anchor.download = "rsvp_export_" + stamp + ".csv";
+            document.body.appendChild(anchor);
+            anchor.click();
+            anchor.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function formatDateTime(value) {
+            if (!value) return "";
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return String(value);
+            return date.toLocaleString("de-DE", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+
+        function textOrDash(value) {
+            if (value == null || value === "") return "-";
+            return String(value);
+        }
+
+        function appendCell(tr, value, className = "") {
+            const td = document.createElement("td");
+            td.className = className;
+            td.textContent = textOrDash(value);
+            tr.appendChild(td);
+        }
+
+        function renderRows(rows) {
+            responsesBody.innerHTML = "";
+            if (!rows.length) {
+                const tr = document.createElement("tr");
+                const td = document.createElement("td");
+                td.colSpan = 9;
+                td.className = "px-3 py-6 text-center text-warmgray/60";
+                td.textContent = "Keine Eintraege gefunden.";
+                tr.appendChild(td);
+                responsesBody.appendChild(tr);
+                return;
+            }
+
+            for (const row of rows) {
+                const tr = document.createElement("tr");
+                tr.className = "align-top";
+                appendCell(tr, formatDateTime(row.created_at), "px-3 py-2.5 whitespace-nowrap");
+                appendCell(tr, row.full_name, "px-3 py-2.5");
+                appendCell(tr, row.email, "px-3 py-2.5");
+                appendCell(tr, row.phone, "px-3 py-2.5");
+                appendCell(tr, row.attendance_status, "px-3 py-2.5");
+                appendCell(tr, row.has_plus_one ? "true" : "false", "px-3 py-2.5");
+                appendCell(tr, row.plus_one_name, "px-3 py-2.5");
+                appendCell(tr, row.song_request, "px-3 py-2.5");
+                appendCell(tr, row.message, "px-3 py-2.5");
+                responsesBody.appendChild(tr);
+            }
+        }
+
+        function updateKpis(rows) {
+            const total = rows.length;
+            const attending = rows.filter((row) => row.attendance_status === "attending").length;
+            const declined = rows.filter((row) => row.attendance_status === "declined").length;
+
+            document.getElementById("kpiTotal").textContent = String(total);
+            document.getElementById("kpiAttending").textContent = String(attending);
+            document.getElementById("kpiDeclined").textContent = String(declined);
+        }
+
+        function applyFilters() {
+            const query = searchInput.value.trim().toLowerCase();
+            const status = statusFilter.value;
+
+            filteredRows = allRows.filter((row) => {
+                const matchesStatus = status === "all" || row.attendance_status === status;
+                if (!matchesStatus) return false;
+                if (!query) return true;
+
+                const haystack = [row.full_name, row.email]
+                    .map((value) => (value == null ? "" : String(value).toLowerCase()))
+                    .join(" ");
+
+                return haystack.includes(query);
+            });
+
+            updateKpis(filteredRows);
+            renderRows(filteredRows);
+            setDashboardStatus("Showing " + filteredRows.length + " of " + allRows.length + " rows.");
+        }
+
+        async function loadResponses() {
+            if (!supabaseClient) return;
+            setDashboardStatus("Lade RSVP Daten...");
+
+            const { data, error } = await supabaseClient
+                .from(SUPABASE_CONFIG.table)
+                .select("created_at, full_name, email, phone, attendance_status, has_plus_one, plus_one_name, song_request, message")
+                .order("created_at", { ascending: false });
+
+            if (error) {
+                setDashboardStatus("Loading failed: " + (error.message || "Unknown error"), true);
+                return;
+            }
+
+            allRows = Array.isArray(data) ? data : [];
+            applyFilters();
+            setDashboardStatus("Data loaded.");
+        }
+
+        async function handleLoginSubmit(event) {
+            event.preventDefault();
+            if (!supabaseClient) return;
+
+            const formData = new FormData(loginForm);
+            const email = String(formData.get("email") || "").trim();
+            const password = String(formData.get("password") || "");
+
+            if (!email || !password) {
+                setLoginStatus("Bitte E-Mail und Passwort eingeben.", true);
+                return;
+            }
+
+            setLoadingLogin(true);
+            setLoginStatus("Authenticating...");
+
+            const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+            if (error) {
+                setLoadingLogin(false);
+                setLoginStatus("Login failed: " + (error.message || "Unknown error"), true);
+                return;
+            }
+
+            setLoginStatus("Login successful.");
+            setLoadingLogin(false);
+        }
+
+        async function handleLogout() {
+            if (!supabaseClient) return;
+            const { error } = await supabaseClient.auth.signOut();
+            if (error) {
+                setDashboardStatus("Logout failed: " + (error.message || "Unknown error"), true);
+                return;
+            }
+            setDashboardStatus("Logged out.");
+        }
+
+        async function syncWithSession() {
+            if (!supabaseClient) return;
+            const { data, error } = await supabaseClient.auth.getSession();
+            if (error) {
+                setLoginStatus("Session check failed: " + (error.message || "Unknown error"), true);
+                setDashboardVisibility(false);
+                return;
+            }
+
+            const session = data?.session;
+            if (session?.user) {
+                setDashboardVisibility(true, session.user.email || "(no email)");
+                await loadResponses();
+            } else {
+                setDashboardVisibility(false);
+                setLoginStatus("Bitte einloggen, um RSVPs zu sehen.");
+            }
+        }
+
+        async function init() {
+            try {
+                supabaseClient = createSupabaseClient();
+            } catch (error) {
+                const message = error instanceof Error ? error.message : "Supabase setup error";
+                configError.textContent = message + " Configure window.SUPABASE_CONFIG with url and anonKey.";
+                configError.classList.remove("hidden");
+                loginCard.classList.add("hidden");
+                dashboard.classList.add("hidden");
+                return;
+            }
+
+            loginForm.addEventListener("submit", handleLoginSubmit);
+            logoutBtn.addEventListener("click", handleLogout);
+            refreshBtn.addEventListener("click", loadResponses);
+            searchInput.addEventListener("input", applyFilters);
+            statusFilter.addEventListener("change", applyFilters);
+            exportBtn.addEventListener("click", exportFilteredToCsv);
+
+            supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+                if (session?.user) {
+                    setDashboardVisibility(true, session.user.email || "(no email)");
+                    await loadResponses();
+                } else {
+                    setDashboardVisibility(false);
+                }
+            });
+
+            await syncWithSession();
+        }
+
+        init();
+    </script>
+</body>
+</html>
